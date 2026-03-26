@@ -42,3 +42,23 @@ Wrote 8 unit tests using Mockito to mock UserRepository, covering all happy path
 
 **Remarks:**
 Used NoSuchElementException from Optional.orElseThrow() for not-found cases. This will be replaced with proper exception handling in a later task.
+
+## Task: Create UserController with CRUD endpoints
+
+**What was done:**
+Created UserController as a @RestController mapped to /users with all five CRUD endpoints:
+- POST /users → 201 Created with Location header
+- GET /users → 200 OK with list of users
+- GET /users/{id} → 200 OK with single user
+- PUT /users/{id} → 200 OK with updated user
+- DELETE /users/{id} → 204 No Content
+Wrote 5 unit tests using @WebMvcTest and MockMvc to test each endpoint in isolation.
+
+**What was changed:**
+- src/main/java/com/programacho/ralphloopexample/UserController.java (new)
+- src/test/java/com/programacho/ralphloopexample/UserControllerTest.java (new)
+- pom.xml (added spring-boot-webmvc-test dependency for @WebMvcTest)
+- prd.md (marked task as complete)
+
+**Remarks:**
+In Spring Boot 4, @WebMvcTest moved from spring-boot-starter-test to a separate spring-boot-webmvc-test module, and the package changed from org.springframework.boot.test.autoconfigure.web.servlet to org.springframework.boot.webmvc.test.autoconfigure.
