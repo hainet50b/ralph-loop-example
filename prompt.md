@@ -1,13 +1,27 @@
 Read the PRD at prd.md and progress.txt, then follow these instructions:
 
-1. Find the first unchecked task (- [ ]) in the Tasks section. If all Tasks are checked, find the first unchecked task in the Post Tasks section.
-2. Implement ONLY that one task. If the task requires dependencies that are not yet in pom.xml, add them.
-3. For Tasks: also write corresponding unit tests using JUnit 5. Mock dependencies where appropriate. For Post Tasks: unit tests are not required.
+1. Find the first unchecked task (- [ ]) in the PRD. Process Tasks first, then Post Tasks.
+2. Implement ONLY that one task. If the task requires dependencies that are not yet in `pom.xml`, add them.
+3. If the task is from Tasks: also write corresponding unit tests using JUnit 5. Mock dependencies where appropriate.
 4. Run `./mvnw test` to verify all existing tests still pass.
 5. If tests pass, mark the task as checked (- [x]) in the PRD.
-6. Append a progress entry to progress.txt with the task name, what was done, and any issues encountered.
+6. Append a progress entry to `progress.txt` using the following format:
+
+```
+## Task: <task name>
+
+**What was done:**
+<summary of implementation — use multiple lines if needed>
+
+**What was changed:**
+<list of files added or modified — one per line>
+
+**Remarks:**
+<any issues encountered, workarounds applied, or lessons learned — write as much as needed>
+```
+
 7. Stage all changes and create a git commit with a descriptive message.
-8. If ALL tasks in both Tasks and Post Tasks are now checked, include the exact text <promise>COMPLETE</promise> in your response.
+8. If ALL tasks in both Tasks and Post Tasks are now checked, include the exact text `<promise>COMPLETE</promise>` in your response.
 
 IMPORTANT:
 - Work on only ONE task, then stop.
