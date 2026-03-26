@@ -39,8 +39,14 @@ Build a RESTful User CRUD API.
 - [ ] Create UserController with CRUD endpoints
 - [ ] Add exception handling for 404 when the user is not found
 - [ ] Add exception handling for 409 when the name or email is already taken
+- [ ] Add Spring Actuator and expose only the health endpoint
+- [ ] Configure H2 Console in application.yaml
+
+## Post Tasks
+- [ ] Create users.http with HTTP requests for all API endpoints, including normal and error cases
+- [ ] Create openapi.yml from the PRD, source code, and progress.txt
 
 ## Completion Criteria
 
-All tasks are checked off and `./mvnw test` passes with no failures.
+All tasks and post tasks are checked off and `./mvnw test` passes with no failures.
 
