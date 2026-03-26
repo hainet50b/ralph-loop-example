@@ -129,3 +129,20 @@ Configured the H2 in-memory database console and datasource in application.yaml.
 
 **Remarks:**
 This is a configuration-only task with no new business logic, so no new unit tests were added. All 33 existing tests continue to pass. The H2 console will be accessible at /h2-console when the application is running.
+
+## Task: Create users.http with HTTP requests for all API endpoints, including normal and error cases
+
+**What was done:**
+Created users.http file with HTTP requests covering all five CRUD endpoints, including both normal and error cases:
+- POST /users (create user, duplicate name 409, duplicate email 409)
+- GET /users (list all)
+- GET /users/{id} (get by ID, not found 404)
+- PUT /users/{id} (update, not found 404, duplicate name 409, duplicate email 409)
+- DELETE /users/{id} (delete, not found 404)
+
+**What was changed:**
+- users.http (new)
+- prd.md (marked task as complete)
+
+**Remarks:**
+This is a Post Task (no unit tests required). The file uses the IntelliJ HTTP Client format with ### separators between requests. All 33 existing tests continue to pass.
