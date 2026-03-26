@@ -1,0 +1,3 @@
+spring:
+  application:
+    name: ralph-loop-example
