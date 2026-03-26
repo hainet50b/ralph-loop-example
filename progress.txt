@@ -117,3 +117,15 @@ Wrote 2 integration tests: one verifying /actuator/health returns 200 with UP st
 
 **Remarks:**
 In Spring Boot 4, TestRestTemplate moved from spring-boot-test to the spring-boot-resttestclient module (package org.springframework.boot.resttestclient), and it requires spring-boot-restclient as a transitive dependency for RestTemplateBuilder. Both were added as test-scoped dependencies. The @AutoConfigureTestRestTemplate annotation is needed alongside @SpringBootTest to auto-configure the TestRestTemplate bean. Total test count went from 31 to 33.
+
+## Task: Configure H2 Console in application.yaml
+
+**What was done:**
+Configured the H2 in-memory database console and datasource in application.yaml. Enabled the H2 console (spring.h2.console.enabled: true) and set explicit datasource properties (url, driver-class-name, username, password) for clarity and consistency.
+
+**What was changed:**
+- src/main/resources/application.yaml (modified — added spring.h2.console and spring.datasource configuration)
+- prd.md (marked task as complete)
+
+**Remarks:**
+This is a configuration-only task with no new business logic, so no new unit tests were added. All 33 existing tests continue to pass. The H2 console will be accessible at /h2-console when the application is running.
