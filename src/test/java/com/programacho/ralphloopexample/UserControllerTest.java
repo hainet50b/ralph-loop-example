@@ -1,8 +1,6 @@
 package com.programacho.ralphloopexample;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,11 +61,41 @@ class UserControllerTest {
     void getUserById_returns200WhenFound() throws Exception {
         User user = new User("Alice", "alice@example.com");
         user.setId(1L);
-        given(userService.findUserById(1L)).willReturn(Optional.of(user));
+        given(userService.findUserById(1L)).willReturn(user);
 
         mockMvc.perform(get("/users/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Alice"));
+    }
+
+    @Test
+    void getUserById_returns404WhenNotFound() throws Exception {
+        given(userService.findUserById(999L)).willThrow(new UserNotFoundException(999L));
+
+        mockMvc.perform(get("/users/999"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("User not found with id: 999"));
+    }
+
+    @Test
+    void updateUser_returns404WhenNotFound() throws Exception {
+        given(userService.updateUser(eq(999L), any(User.class)))
+                .willThrow(new UserNotFoundException(999L));
+
+        mockMvc.perform(put("/users/999")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"Bob\",\"email\":\"bob@example.com\"}"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("User not found with id: 999"));
+    }
+
+    @Test
+    void deleteUser_returns404WhenNotFound() throws Exception {
+        willThrow(new UserNotFoundException(999L)).given(userService).deleteUser(999L);
+
+        mockMvc.perform(delete("/users/999"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("User not found with id: 999"));
     }
 
     @Test

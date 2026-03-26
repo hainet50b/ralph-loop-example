@@ -37,7 +37,7 @@ Build a RESTful User CRUD API.
 - [x] Create UserRepository
 - [x] Create UserService with CRUD methods
 - [x] Create UserController with CRUD endpoints
-- [ ] Add exception handling for 404 when the user is not found
+- [x] Add exception handling for 404 when the user is not found
 - [ ] Add exception handling for 409 when the name or email is already taken
 - [ ] Add Spring Actuator and expose only the health endpoint
 - [ ] Configure H2 Console in application.yaml

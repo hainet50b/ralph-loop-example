@@ -62,3 +62,23 @@ Wrote 5 unit tests using @WebMvcTest and MockMvc to test each endpoint in isolat
 
 **Remarks:**
 In Spring Boot 4, @WebMvcTest moved from spring-boot-starter-test to a separate spring-boot-webmvc-test module, and the package changed from org.springframework.boot.test.autoconfigure.web.servlet to org.springframework.boot.webmvc.test.autoconfigure.
+
+## Task: Add exception handling for 404 when the user is not found
+
+**What was done:**
+Created a custom UserNotFoundException and a GlobalExceptionHandler (@RestControllerAdvice) that maps it to HTTP 404 with a JSON error body.
+Updated UserService to throw UserNotFoundException (instead of NoSuchElementException) in findUserById, updateUser, and deleteUser.
+Changed findUserById return type from Optional<User> to User since the exception is now thrown at the service layer.
+Updated existing unit tests to expect UserNotFoundException and added 3 new controller tests for 404 responses on GET /users/{id}, PUT /users/{id}, and DELETE /users/{id}.
+
+**What was changed:**
+- src/main/java/com/programacho/ralphloopexample/UserNotFoundException.java (new)
+- src/main/java/com/programacho/ralphloopexample/GlobalExceptionHandler.java (new)
+- src/main/java/com/programacho/ralphloopexample/UserService.java (modified)
+- src/main/java/com/programacho/ralphloopexample/UserController.java (modified)
+- src/test/java/com/programacho/ralphloopexample/UserServiceTest.java (modified)
+- src/test/java/com/programacho/ralphloopexample/UserControllerTest.java (modified)
+- prd.md (marked task as complete)
+
+**Remarks:**
+Changed UserService.findUserById from returning Optional<User> to returning User directly, since the not-found case is now handled by throwing UserNotFoundException. This simplifies the controller code.

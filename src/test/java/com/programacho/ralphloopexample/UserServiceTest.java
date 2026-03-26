@@ -1,7 +1,6 @@
 package com.programacho.ralphloopexample;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -51,19 +50,18 @@ class UserServiceTest {
         User user = new User("Alice", "alice@example.com");
         given(userRepository.findById(1L)).willReturn(Optional.of(user));
 
-        Optional<User> result = userService.findUserById(1L);
+        User result = userService.findUserById(1L);
 
-        assertThat(result).isPresent();
-        assertThat(result.get().getName()).isEqualTo("Alice");
+        assertThat(result.getName()).isEqualTo("Alice");
     }
 
     @Test
-    void findUserById_returnsEmptyWhenNotFound() {
+    void findUserById_throwsWhenNotFound() {
         given(userRepository.findById(1L)).willReturn(Optional.empty());
 
-        Optional<User> result = userService.findUserById(1L);
-
-        assertThat(result).isEmpty();
+        assertThatThrownBy(() -> userService.findUserById(1L))
+                .isInstanceOf(UserNotFoundException.class)
+                .hasMessage("User not found with id: 1");
     }
 
     @Test
@@ -83,7 +81,7 @@ class UserServiceTest {
         given(userRepository.findById(1L)).willReturn(Optional.empty());
 
         assertThatThrownBy(() -> userService.updateUser(1L, new User("Bob", "bob@example.com")))
-                .isInstanceOf(NoSuchElementException.class);
+                .isInstanceOf(UserNotFoundException.class);
     }
 
     @Test
@@ -101,6 +99,6 @@ class UserServiceTest {
         given(userRepository.findById(1L)).willReturn(Optional.empty());
 
         assertThatThrownBy(() -> userService.deleteUser(1L))
-                .isInstanceOf(NoSuchElementException.class);
+                .isInstanceOf(UserNotFoundException.class);
     }
 }
