@@ -44,7 +44,6 @@ Build a RESTful User CRUD API.
 
 ## Post Tasks
 - [ ] Create users.http with HTTP requests for all API endpoints, including normal and error cases
-- [ ] Create openapi.yml from the PRD, source code, and progress.txt
 
 ## Completion Criteria
 
