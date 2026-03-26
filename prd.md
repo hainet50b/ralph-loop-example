@@ -34,7 +34,7 @@ Build a RESTful User CRUD API.
 ## Tasks
 
 - [x] Create User entity
-- [ ] Create UserRepository
+- [x] Create UserRepository
 - [ ] Create UserService with CRUD methods
 - [ ] Create UserController with CRUD endpoints
 - [ ] Add exception handling for 404 when the user is not found

@@ -13,3 +13,17 @@ Wrote unit tests verifying constructor and setter/getter behavior.
 **Remarks:**
 Used @Table(name = "users") to avoid conflict with the reserved SQL keyword "user".
 Added a protected no-arg constructor for JPA and a public constructor taking name and email.
+
+## Task: Create UserRepository
+
+**What was done:**
+Created UserRepository interface extending JpaRepository<User, Long> for standard CRUD operations.
+Wrote integration tests for save, findById, findAll, and deleteById operations.
+
+**What was changed:**
+- src/main/java/com/programacho/ralphloopexample/UserRepository.java (new)
+- src/test/java/com/programacho/ralphloopexample/UserRepositoryTest.java (new)
+- prd.md (marked task as complete)
+
+**Remarks:**
+@DataJpaTest is not available in Spring Boot 4's spring-boot-starter-test; used @SpringBootTest with @Transactional instead to get the same rollback-per-test behavior.
