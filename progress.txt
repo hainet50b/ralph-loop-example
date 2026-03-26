@@ -82,3 +82,24 @@ Updated existing unit tests to expect UserNotFoundException and added 3 new cont
 
 **Remarks:**
 Changed UserService.findUserById from returning Optional<User> to returning User directly, since the not-found case is now handled by throwing UserNotFoundException. This simplifies the controller code.
+
+## Task: Add exception handling for 409 when the name or email is already taken
+
+**What was done:**
+Created UserAlreadyExistsException and added duplicate-check logic to UserService's createUser and updateUser methods.
+Added existsByName and existsByEmail query methods to UserRepository.
+Added a 409 Conflict handler in GlobalExceptionHandler.
+The updateUser method only checks for conflicts when the name or email actually changes, allowing a user to be updated with its own existing values.
+Wrote 7 new unit tests: 3 for UserService (create with duplicate name, create with duplicate email, update allowing same values) and 2 for UserService update conflicts, plus 2 controller tests for 409 on POST and PUT.
+
+**What was changed:**
+- src/main/java/com/programacho/ralphloopexample/UserAlreadyExistsException.java (new)
+- src/main/java/com/programacho/ralphloopexample/UserRepository.java (modified — added existsByName, existsByEmail)
+- src/main/java/com/programacho/ralphloopexample/UserService.java (modified — added duplicate checks in createUser and updateUser)
+- src/main/java/com/programacho/ralphloopexample/GlobalExceptionHandler.java (modified — added 409 handler)
+- src/test/java/com/programacho/ralphloopexample/UserServiceTest.java (modified — added 5 new tests, updated existing test stubs)
+- src/test/java/com/programacho/ralphloopexample/UserControllerTest.java (modified — added 2 new tests for 409)
+- prd.md (marked task as complete)
+
+**Remarks:**
+The updateUser duplicate check skips the existsBy query when the value hasn't changed, avoiding false conflicts when a user is saved with its own name/email. Total test count went from 22 to 31.

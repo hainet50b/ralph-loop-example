@@ -99,6 +99,30 @@ class UserControllerTest {
     }
 
     @Test
+    void createUser_returns409WhenNameAlreadyExists() throws Exception {
+        given(userService.createUser(any(User.class)))
+                .willThrow(new UserAlreadyExistsException("name", "Alice"));
+
+        mockMvc.perform(post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"Alice\",\"email\":\"alice@example.com\"}"))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.error").value("User already exists with name: Alice"));
+    }
+
+    @Test
+    void updateUser_returns409WhenEmailAlreadyTaken() throws Exception {
+        given(userService.updateUser(eq(1L), any(User.class)))
+                .willThrow(new UserAlreadyExistsException("email", "bob@example.com"));
+
+        mockMvc.perform(put("/users/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"Bob\",\"email\":\"bob@example.com\"}"))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.error").value("User already exists with email: bob@example.com"));
+    }
+
+    @Test
     void updateUser_returns200() throws Exception {
         User updated = new User("Bob", "bob@example.com");
         updated.setId(1L);

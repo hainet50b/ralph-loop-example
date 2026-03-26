@@ -27,12 +27,35 @@ class UserServiceTest {
     @Test
     void createUser_savesAndReturnsUser() {
         User user = new User("Alice", "alice@example.com");
+        given(userRepository.existsByName("Alice")).willReturn(false);
+        given(userRepository.existsByEmail("alice@example.com")).willReturn(false);
         given(userRepository.save(user)).willReturn(user);
 
         User result = userService.createUser(user);
 
         assertThat(result.getName()).isEqualTo("Alice");
         then(userRepository).should().save(user);
+    }
+
+    @Test
+    void createUser_throwsWhenNameAlreadyExists() {
+        User user = new User("Alice", "alice@example.com");
+        given(userRepository.existsByName("Alice")).willReturn(true);
+
+        assertThatThrownBy(() -> userService.createUser(user))
+                .isInstanceOf(UserAlreadyExistsException.class)
+                .hasMessage("User already exists with name: Alice");
+    }
+
+    @Test
+    void createUser_throwsWhenEmailAlreadyExists() {
+        User user = new User("Alice", "alice@example.com");
+        given(userRepository.existsByName("Alice")).willReturn(false);
+        given(userRepository.existsByEmail("alice@example.com")).willReturn(true);
+
+        assertThatThrownBy(() -> userService.createUser(user))
+                .isInstanceOf(UserAlreadyExistsException.class)
+                .hasMessage("User already exists with email: alice@example.com");
     }
 
     @Test
@@ -68,12 +91,49 @@ class UserServiceTest {
     void updateUser_updatesAndReturnsUser() {
         User existing = new User("Alice", "alice@example.com");
         given(userRepository.findById(1L)).willReturn(Optional.of(existing));
+        given(userRepository.existsByName("Bob")).willReturn(false);
+        given(userRepository.existsByEmail("bob@example.com")).willReturn(false);
         given(userRepository.save(any(User.class))).willAnswer(inv -> inv.getArgument(0));
 
         User updated = userService.updateUser(1L, new User("Bob", "bob@example.com"));
 
         assertThat(updated.getName()).isEqualTo("Bob");
         assertThat(updated.getEmail()).isEqualTo("bob@example.com");
+    }
+
+    @Test
+    void updateUser_throwsWhenNameAlreadyTaken() {
+        User existing = new User("Alice", "alice@example.com");
+        given(userRepository.findById(1L)).willReturn(Optional.of(existing));
+        given(userRepository.existsByName("Bob")).willReturn(true);
+
+        assertThatThrownBy(() -> userService.updateUser(1L, new User("Bob", "bob@example.com")))
+                .isInstanceOf(UserAlreadyExistsException.class)
+                .hasMessage("User already exists with name: Bob");
+    }
+
+    @Test
+    void updateUser_throwsWhenEmailAlreadyTaken() {
+        User existing = new User("Alice", "alice@example.com");
+        given(userRepository.findById(1L)).willReturn(Optional.of(existing));
+        given(userRepository.existsByName("Bob")).willReturn(false);
+        given(userRepository.existsByEmail("bob@example.com")).willReturn(true);
+
+        assertThatThrownBy(() -> userService.updateUser(1L, new User("Bob", "bob@example.com")))
+                .isInstanceOf(UserAlreadyExistsException.class)
+                .hasMessage("User already exists with email: bob@example.com");
+    }
+
+    @Test
+    void updateUser_allowsSameNameAndEmailForSameUser() {
+        User existing = new User("Alice", "alice@example.com");
+        given(userRepository.findById(1L)).willReturn(Optional.of(existing));
+        given(userRepository.save(any(User.class))).willAnswer(inv -> inv.getArgument(0));
+
+        User updated = userService.updateUser(1L, new User("Alice", "alice@example.com"));
+
+        assertThat(updated.getName()).isEqualTo("Alice");
+        assertThat(updated.getEmail()).isEqualTo("alice@example.com");
     }
 
     @Test
