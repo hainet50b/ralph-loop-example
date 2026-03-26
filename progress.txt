@@ -27,3 +27,18 @@ Wrote integration tests for save, findById, findAll, and deleteById operations.
 
 **Remarks:**
 @DataJpaTest is not available in Spring Boot 4's spring-boot-starter-test; used @SpringBootTest with @Transactional instead to get the same rollback-per-test behavior.
+
+## Task: Create UserService with CRUD methods
+
+**What was done:**
+Created UserService with methods for all CRUD operations: createUser, findAllUsers, findUserById, updateUser, and deleteUser.
+The service delegates to UserRepository and throws NoSuchElementException when an entity is not found during update or delete.
+Wrote 8 unit tests using Mockito to mock UserRepository, covering all happy paths and error cases.
+
+**What was changed:**
+- src/main/java/com/programacho/ralphloopexample/UserService.java (new)
+- src/test/java/com/programacho/ralphloopexample/UserServiceTest.java (new)
+- prd.md (marked task as complete)
+
+**Remarks:**
+Used NoSuchElementException from Optional.orElseThrow() for not-found cases. This will be replaced with proper exception handling in a later task.
