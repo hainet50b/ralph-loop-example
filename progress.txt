@@ -103,3 +103,17 @@ Wrote 7 new unit tests: 3 for UserService (create with duplicate name, create wi
 
 **Remarks:**
 The updateUser duplicate check skips the existsBy query when the value hasn't changed, avoiding false conflicts when a user is saved with its own name/email. Total test count went from 22 to 31.
+
+## Task: Add Spring Actuator and expose only the health endpoint
+
+**What was done:**
+Added spring-boot-starter-actuator dependency and configured management endpoints to expose only the health endpoint.
+Wrote 2 integration tests: one verifying /actuator/health returns 200 with UP status, and one verifying /actuator/env returns 404 (not exposed).
+
+**What was changed:**
+- pom.xml (added spring-boot-starter-actuator, spring-boot-restclient, spring-boot-resttestclient)
+- src/main/resources/application.yaml (added management.endpoints.web.exposure.include: health)
+- src/test/java/com/programacho/ralphloopexample/ActuatorHealthTest.java (new)
+
+**Remarks:**
+In Spring Boot 4, TestRestTemplate moved from spring-boot-test to the spring-boot-resttestclient module (package org.springframework.boot.resttestclient), and it requires spring-boot-restclient as a transitive dependency for RestTemplateBuilder. Both were added as test-scoped dependencies. The @AutoConfigureTestRestTemplate annotation is needed alongside @SpringBootTest to auto-configure the TestRestTemplate bean. Total test count went from 31 to 33.
