@@ -33,7 +33,7 @@ Build a RESTful User CRUD API.
 
 ## Tasks
 
-- [ ] Create User entity
+- [x] Create User entity
 - [ ] Create UserRepository
 - [ ] Create UserService with CRUD methods
 - [ ] Create UserController with CRUD endpoints

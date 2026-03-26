@@ -1,0 +1,15 @@
+## Task: Create User entity
+
+**What was done:**
+Created the User JPA entity class with id (auto-generated Long), name (required, unique), and email (required, unique) fields.
+Added Spring Web, Spring Data JPA, H2, and Spring Boot Test dependencies to pom.xml since the project had no dependencies.
+Wrote unit tests verifying constructor and setter/getter behavior.
+
+**What was changed:**
+- pom.xml (added spring-boot-starter-web, spring-boot-starter-data-jpa, h2, spring-boot-starter-test)
+- src/main/java/com/programacho/ralphloopexample/User.java (new)
+- src/test/java/com/programacho/ralphloopexample/UserTest.java (new)
+
+**Remarks:**
+Used @Table(name = "users") to avoid conflict with the reserved SQL keyword "user".
+Added a protected no-arg constructor for JPA and a public constructor taking name and email.
