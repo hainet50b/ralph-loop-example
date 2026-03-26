@@ -1,0 +1,112 @@
+# Ralph Loop Example
+
+A hands-on example of the [Ralph Loop](https://ghuntley.com/ralph/) (also known as the "Ralph Wiggum Loop"), an autonomous AI coding workflow originally introduced by Geoffrey Huntley.
+
+This repository demonstrates the Ralph Loop by building a simple User CRUD API with Spring Boot 4 from a minimal PRD (Product Requirements Document).
+
+## How It Works
+
+The Ralph Loop is a pattern where an AI agent reads a PRD, implements one task at a time, verifies it with tests, and repeats until all tasks are complete. When you run `./ralph.sh`, the following happens:
+
+1. `ralph.sh` invokes `claude -p` with the contents of `prompt.md`
+2. Claude reads `prd.md` and `progress.txt`, then finds the first unchecked task
+3. Claude implements the task and writes unit tests
+4. Claude runs `./mvnw test` — if tests fail, it fixes the code before proceeding
+5. Claude marks the task as checked in `prd.md` and logs what it did in `progress.txt`
+6. Claude stages all changes and creates a git commit
+7. If unchecked tasks remain, `ralph.sh` starts the next iteration from step 1 with a fresh context window
+8. When all tasks are checked, Claude outputs `<promise>COMPLETE</promise>` and the loop exits
+
+## Prerequisites
+
+- Java 25+
+- [Claude Code](https://claude.ai/download) CLI installed and authenticated
+
+## Getting Started
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/hainet50b/ralph-loop-example.git
+cd ralph-loop-example
+```
+
+2. Create a branch for the Ralph Loop run (do **not** run on `main`):
+
+```bash
+git switch -c example/ralph-loop-result
+```
+
+3. (IMPORTANT) Review `prompt.md` and `prd.md` before running. The loop uses `--dangerously-skip-permissions`, which allows the AI agent to execute arbitrary commands without confirmation. The exact behavior cannot be guaranteed.
+
+4. Run the loop:
+
+```bash
+./ralph.sh
+```
+
+By default, the loop runs up to 10 iterations. To override:
+
+```bash
+./ralph.sh 20
+```
+
+5. Once complete, start the application and try the API:
+
+```bash
+./mvnw spring-boot:run
+curl -s localhost:8080/actuator/health
+curl -s -X POST localhost:8080/users -H 'Content-Type: application/json' -d '{"name":"Alice","email":"alice@example.com"}'
+curl -s localhost:8080/users
+```
+
+## Example Ralph Loop Result
+
+See the [`example/ralph-loop-result`](https://github.com/hainet50b/ralph-loop-example/tree/example/ralph-loop-result) branch for the result of a completed Ralph Loop run, including all generated source code, tests, and progress log.
+
+## Key Files
+
+This example uses the following files to drive the Ralph Loop:
+
+```
+.
+├── prd.md          # What to build
+├── prompt.md       # How each iteration should behave
+├── ralph.sh        # Loop controller
+└── progress.txt    # Work trail
+```
+
+### `prd.md`
+
+The Product Requirements Document. Defines what to build — API specification, data model, and tasks as checkboxes.
+
+> **Note:** In this example, specifications are written inline. You could also use dedicated specification formats (e.g., OpenAPI) as separate files and reference them from the PRD.
+
+The PRD consists of the following sections:
+
+- **Goal** — What to build, in one sentence.
+- **Tech Stack** — Frameworks and libraries. Constrains the AI agent to technologies the developer can review and maintain.
+- **API Endpoints** — The API contract the AI agent implements.
+- **Data Model** — The data structure the AI agent implements.
+- **Tasks** — Implementation work verified by unit tests. Each checkbox corresponds to one iteration of the loop.
+- **Post Tasks** — Extra artifacts (e.g., `.http` files) that do not require test verification. Also one checkbox per iteration.
+- **Completion Criteria** — A machine-verifiable definition of "done" that the AI agent checks after each task.
+
+### `prompt.md`
+
+Defines how each iteration should behave — task selection order, testing requirements, commit workflow, and completion signal. Passed to Claude on every iteration. Separated from `ralph.sh` to keep loop control and iteration behavior independent.
+
+### `ralph.sh`
+
+The loop controller. A bash script that:
+
+- Runs up to N iterations
+- Calls `claude -p` with the contents of `prompt.md` on each iteration
+- Exits when:
+  - Claude outputs `<promise>COMPLETE</promise>` (all tasks done)
+  - The max iteration count is reached (exits with failure)
+
+### `progress.txt`
+
+An initially empty file where the AI agent logs what it did after each iteration — what was done, what files were changed, and any remarks (issues, workarounds, lessons learned). Serves as both a work trail and inter-iteration memory (since each `claude -p` call starts with a fresh context window).
+
