@@ -28,7 +28,7 @@ Build a RESTful User CRUD API.
 | Field | Type   | Constraints        |
 |-------|--------|--------------------|
 | id    | Long   | Auto-generated, PK |
-| name  | String | Required           |
+| name  | String | Required, Unique   |
 | email | String | Required, Unique   |
 
 ## Tasks
