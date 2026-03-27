@@ -21,6 +21,7 @@ The Ralph Loop is a pattern where an AI agent reads a PRD, implements one task a
 
 - Java 25+
 - [Claude Code](https://claude.ai/download) CLI installed and authenticated
+- `jq` and `bc` (used by `ralph.sh` for token usage tracking)
 
 ## Getting Started
 
