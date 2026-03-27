@@ -1,0 +1,16 @@
+
+## Task: Create User entity
+
+**Timestamp:**
+2026-03-27T12:38:00Z
+
+**What was done:**
+Created the User JPA entity with id (auto-generated Long PK), name (required, unique), and email (required, unique) fields. Added Spring Data JPA, Spring Web, H2, and Spring Boot Test dependencies to pom.xml since the project had no dependencies. The entity uses the "users" table name to avoid the reserved word "user" in H2.
+
+**What was changed:**
+- pom.xml (added spring-boot-starter-data-jpa, spring-boot-starter-web, h2, spring-boot-starter-test)
+- src/main/java/com/programacho/ralphloopexample/User.java (new)
+- src/test/java/com/programacho/ralphloopexample/UserTests.java (new)
+
+**Remarks:**
+Added spring-boot-starter-web and spring-boot-starter-test proactively since they are required by the tech stack and upcoming tasks.
