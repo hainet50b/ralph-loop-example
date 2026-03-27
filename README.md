@@ -65,7 +65,7 @@ curl -s localhost:8080/users
 
 See the [`example/ralph-loop-result`](https://github.com/hainet50b/ralph-loop-example/tree/example/ralph-loop-result) branch for the result of a completed Ralph Loop run, including all generated source code, tests, and progress log.
 
-The following run was completed using Claude Opus 4.6 in 9 iterations (871s total):
+The following run was based on [`example/ralph-loop-result-a9e88cc`](https://github.com/hainet50b/ralph-loop-example/tree/example/ralph-loop-result-a9e88cc) and completed using Claude Opus 4.6 in 9 iterations (871s total):
 
 | # | Task                                       | Time   |
 |---|--------------------------------------------|--------|
