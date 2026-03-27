@@ -94,7 +94,8 @@ This example uses the following files to drive the Ralph Loop:
 ├── prd.md          # What to build
 ├── prompt.md       # How each iteration should behave
 ├── ralph.sh        # Loop controller
-└── progress.txt    # Work trail
+├── progress.txt    # Work trail
+└── metrics.csv     # Token usage and cost per iteration
 ```
 
 ### `prd.md`
@@ -123,6 +124,7 @@ The loop controller. A bash script that:
 
 - Runs up to N iterations
 - Calls `claude -p` with the contents of `prompt.md` on each iteration
+- Tracks duration, token usage, and cost per iteration, and records them to `metrics.csv`
 - Exits when:
   - Claude outputs `<promise>COMPLETE</promise>` (all tasks done)
   - The max iteration count is reached (exits with failure)
@@ -130,4 +132,8 @@ The loop controller. A bash script that:
 ### `progress.txt`
 
 An initially empty file where the AI agent logs what it did after each iteration — what was done, what files were changed, and any remarks (issues, workarounds, lessons learned). Serves as both a work trail and inter-iteration memory (since each `claude -p` call starts with a fresh context window).
+
+### `metrics.csv`
+
+A CSV file where `ralph.sh` records duration, token usage, and cost for each iteration. Tracking time per iteration helps identify tasks that are difficult or require attention, and can inform how to adjust task granularity in the PRD. Tracking tokens and cost helps verify that changes to `prd.md` or `prompt.md` do not cause unexpected spending.
 
