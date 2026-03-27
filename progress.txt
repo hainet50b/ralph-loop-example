@@ -47,3 +47,20 @@ Created UserService with CRUD methods: create, findAll, findById, update, and de
 
 **Remarks:**
 No new dependencies needed. Used @ExtendWith(MockitoExtension.class) with @Mock and @InjectMocks for lightweight unit tests that don't load the Spring context.
+
+## Task: Create UserController with CRUD endpoints
+
+**Timestamp:**
+2026-03-27T12:45:00Z
+
+**What was done:**
+Created UserController as a @RestController with @RequestMapping("/users") implementing all five CRUD endpoints: POST /users (201 Created), GET /users (200), GET /users/{id} (200/404), PUT /users/{id} (200/404), and DELETE /users/{id} (204/404). Added 8 unit tests using @WebMvcTest with MockMvc and a mocked UserService covering all endpoints including not-found cases.
+
+**What was changed:**
+- src/main/java/com/programacho/ralphloopexample/UserController.java (new)
+- src/test/java/com/programacho/ralphloopexample/UserControllerTests.java (new)
+- pom.xml (added spring-boot-starter-webmvc-test for @WebMvcTest support)
+- prd.md (marked task complete)
+
+**Remarks:**
+In Spring Boot 4, @WebMvcTest moved from org.springframework.boot.test.autoconfigure.web.servlet to org.springframework.boot.webmvc.test.autoconfigure, and requires the separate spring-boot-starter-webmvc-test dependency. Jackson's ObjectMapper is not on the test classpath with just the webmvc-test starter, so used inline JSON text blocks instead.
