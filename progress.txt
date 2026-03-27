@@ -122,3 +122,20 @@ Added the spring-boot-starter-actuator dependency to pom.xml. Configured applica
 
 **Remarks:**
 In Spring Boot 4, @AutoConfigureMockMvc moved from org.springframework.boot.test.autoconfigure.web.servlet to org.springframework.boot.webmvc.test.autoconfigure. Used @SpringBootTest with @AutoConfigureMockMvc instead of @WebMvcTest to ensure the full actuator infrastructure is loaded.
+
+## Task: Configure H2 Console in application.yaml
+
+**Timestamp:**
+2026-03-27T12:56:00Z
+
+**What was done:**
+Configured H2 Console in application.yaml by enabling it with `spring.h2.console.enabled: true` and setting the path to `/h2-console`. Also configured the H2 datasource with `jdbc:h2:mem:testdb`, driver class, and default credentials. Added the `spring-boot-h2console` dependency to pom.xml since in Spring Boot 4 the H2 console auto-configuration lives in a separate module. Added 2 unit tests verifying the console is enabled and the path is correctly configured.
+
+**What was changed:**
+- src/main/resources/application.yaml (added datasource and H2 console configuration)
+- pom.xml (added spring-boot-h2console dependency)
+- src/test/java/com/programacho/ralphloopexample/H2ConsoleTests.java (new)
+- prd.md (marked task complete)
+
+**Remarks:**
+In Spring Boot 4, the H2 console auto-configuration moved from the main autoconfigure module to a separate `spring-boot-h2console` module (package `org.springframework.boot.h2console.autoconfigure`). There is no starter for it — the module must be added directly. The H2 console is a servlet, not a Spring MVC endpoint, so MockMvc cannot reach it. Tests verify configuration properties instead of HTTP access.
