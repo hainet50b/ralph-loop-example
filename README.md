@@ -61,6 +61,13 @@ curl -s -X POST localhost:8080/users -H 'Content-Type: application/json' -d '{"n
 curl -s localhost:8080/users
 ```
 
+6. To run again, archive the current result branch and start fresh from step 2:
+
+```bash
+git branch -m "$(git branch --show-current)-$(git log -1 --format=%h)"
+git switch main
+```
+
 ## Example Ralph Loop Result
 
 See the [`example/ralph-loop-result`](https://github.com/hainet50b/ralph-loop-example/tree/example/ralph-loop-result) branch for the result of a completed Ralph Loop run, including all generated source code, tests, and progress log.
