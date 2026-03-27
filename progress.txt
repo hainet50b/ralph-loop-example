@@ -139,3 +139,18 @@ Configured H2 Console in application.yaml by enabling it with `spring.h2.console
 
 **Remarks:**
 In Spring Boot 4, the H2 console auto-configuration moved from the main autoconfigure module to a separate `spring-boot-h2console` module (package `org.springframework.boot.h2console.autoconfigure`). There is no starter for it — the module must be added directly. The H2 console is a servlet, not a Spring MVC endpoint, so MockMvc cannot reach it. Tests verify configuration properties instead of HTTP access.
+
+## Task: Create users.http with HTTP requests for all API endpoints, including normal and error cases
+
+**Timestamp:**
+2026-03-27T12:58:00Z
+
+**What was done:**
+Created users.http file with HTTP requests for all five CRUD API endpoints, covering both normal operations and error cases. Includes: 2 POST requests for creating users, 2 POST requests for 409 conflicts (duplicate name and email), 1 GET for listing all users, 1 GET for a specific user, 1 GET for 404 not found, 2 PUT requests for normal update and 404 not found, 2 PUT requests for 409 conflicts (name and email taken by another user), 1 DELETE for normal deletion, and 1 DELETE for 404 not found.
+
+**What was changed:**
+- users.http (new)
+- prd.md (marked task complete)
+
+**Remarks:**
+This is a Post Task so no unit tests were required. The .http file format is compatible with IntelliJ IDEA's HTTP Client and VS Code's REST Client extension. All requests target localhost:8080 which is the default Spring Boot port.

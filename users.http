@@ -1,0 +1,86 @@
+### Create user
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "name": "Alice",
+  "email": "alice@example.com"
+}
+
+### Create another user
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "name": "Bob",
+  "email": "bob@example.com"
+}
+
+### Create user - 409 Conflict (duplicate name)
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "name": "Alice",
+  "email": "different@example.com"
+}
+
+### Create user - 409 Conflict (duplicate email)
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "name": "Charlie",
+  "email": "alice@example.com"
+}
+
+### List all users
+GET http://localhost:8080/users
+
+### Get user by ID
+GET http://localhost:8080/users/1
+
+### Get user by ID - 404 Not Found
+GET http://localhost:8080/users/999
+
+### Update user
+PUT http://localhost:8080/users/1
+Content-Type: application/json
+
+{
+  "name": "Alice Updated",
+  "email": "alice.updated@example.com"
+}
+
+### Update user - 404 Not Found
+PUT http://localhost:8080/users/999
+Content-Type: application/json
+
+{
+  "name": "Nobody",
+  "email": "nobody@example.com"
+}
+
+### Update user - 409 Conflict (name taken by another user)
+PUT http://localhost:8080/users/1
+Content-Type: application/json
+
+{
+  "name": "Bob",
+  "email": "alice.updated@example.com"
+}
+
+### Update user - 409 Conflict (email taken by another user)
+PUT http://localhost:8080/users/1
+Content-Type: application/json
+
+{
+  "name": "Alice Updated",
+  "email": "bob@example.com"
+}
+
+### Delete user
+DELETE http://localhost:8080/users/1
+
+### Delete user - 404 Not Found
+DELETE http://localhost:8080/users/999
