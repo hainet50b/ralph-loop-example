@@ -64,6 +64,26 @@ curl -s localhost:8080/users
 
 See the [`example/ralph-loop-result`](https://github.com/hainet50b/ralph-loop-example/tree/example/ralph-loop-result) branch for the result of a completed Ralph Loop run, including all generated source code, tests, and progress log.
 
+The following run was completed using Claude Opus 4.6 in 9 iterations (871s total):
+
+| # | Task                                       | Time   |
+|---|--------------------------------------------|--------|
+| 1 | Create User entity                         | 79s    |
+| 2 | Create UserRepository                      | 77s    |
+| 3 | Create UserService with CRUD methods       | 60s    |
+| 4 | Create UserController with CRUD endpoints  | 116s   |
+| 5 | Add exception handling for 404             | 105s   |
+| 6 | Add exception handling for 409             | 117s   |
+| 7 | Add Spring Actuator (health endpoint only) | 196s * |
+| 8 | Configure H2 Console                       | 52s    |
+| 9 | Create users.http (Post Task)              | 53s    |
+
+\* Iteration 7 took significantly longer than others. From `progress.txt`:
+
+> In Spring Boot 4, TestRestTemplate moved from spring-boot-test to the spring-boot-resttestclient module (package org.springframework.boot.resttestclient), and it requires spring-boot-restclient as a transitive dependency for RestTemplateBuilder. Both were added as test-scoped dependencies.
+
+The AI agent spent extra time discovering and resolving Spring Boot 4 dependency changes through trial and error. Tracking time per iteration helps identify where the agent struggles.
+
 ## Key Files
 
 This example uses the following files to drive the Ralph Loop:
