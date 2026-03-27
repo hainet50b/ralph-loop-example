@@ -10,7 +10,8 @@ Read the PRD at prd.md and progress.txt, then follow these instructions:
 ```
 ## Task: <task name>
 
-**Timestamp:** <current UTC time in ISO 8601 format>
+**Timestamp:**
+<current UTC time in ISO 8601 format>
 
 **What was done:**
 <summary of implementation — use multiple lines if needed>
