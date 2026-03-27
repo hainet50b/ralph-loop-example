@@ -47,6 +47,7 @@ for ((i = 1; i <= MAX_ITERATIONS; i++)); do
 
   if [[ "$result" == *"<promise>COMPLETE</promise>"* ]]; then
     total_duration_s=$(echo "$total_duration_ms / 1000" | bc)
+    git add "$METRICS_FILE" && git commit -m "Add metrics.csv for Ralph Loop run"
     echo "=== All tasks complete! (total: ${total_duration_s}s | in: ${total_input_tokens} out: ${total_output_tokens} cost: \$${total_cost}) ==="
     exit 0
   fi
@@ -54,6 +55,7 @@ for ((i = 1; i <= MAX_ITERATIONS; i++)); do
   sleep "$SLEEP_SECONDS"
 done
 
+git add "$METRICS_FILE" && git commit -m "Add metrics.csv for Ralph Loop run (incomplete)"
 total_duration_s=$(echo "$total_duration_ms / 1000" | bc)
 echo "=== Reached max iterations ($MAX_ITERATIONS) without completing all tasks (total: ${total_duration_s}s | in: ${total_input_tokens} out: ${total_output_tokens} cost: \$${total_cost}) ==="
 exit 1
