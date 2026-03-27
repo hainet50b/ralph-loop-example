@@ -64,3 +64,24 @@ Created UserController as a @RestController with @RequestMapping("/users") imple
 
 **Remarks:**
 In Spring Boot 4, @WebMvcTest moved from org.springframework.boot.test.autoconfigure.web.servlet to org.springframework.boot.webmvc.test.autoconfigure, and requires the separate spring-boot-starter-webmvc-test dependency. Jackson's ObjectMapper is not on the test classpath with just the webmvc-test starter, so used inline JSON text blocks instead.
+
+## Task: Add exception handling for 404 when the user is not found
+
+**Timestamp:**
+2026-03-27T12:48:00Z
+
+**What was done:**
+Introduced exception-based 404 handling using a custom UserNotFoundException and a @RestControllerAdvice GlobalExceptionHandler. Refactored UserService to throw UserNotFoundException instead of returning Optional/boolean for findById, update, and delete. Simplified UserController by removing inline Optional handling. The 404 response now includes a JSON body with an error message (e.g., {"error": "User not found with id: 99"}). Added unit tests for GlobalExceptionHandler and updated existing UserService and UserController tests.
+
+**What was changed:**
+- src/main/java/com/programacho/ralphloopexample/UserNotFoundException.java (new)
+- src/main/java/com/programacho/ralphloopexample/GlobalExceptionHandler.java (new)
+- src/main/java/com/programacho/ralphloopexample/UserService.java (modified)
+- src/main/java/com/programacho/ralphloopexample/UserController.java (modified)
+- src/test/java/com/programacho/ralphloopexample/GlobalExceptionHandlerTests.java (new)
+- src/test/java/com/programacho/ralphloopexample/UserServiceTests.java (modified)
+- src/test/java/com/programacho/ralphloopexample/UserControllerTests.java (modified)
+- prd.md (marked task complete)
+
+**Remarks:**
+Chose to refactor UserService return types from Optional<User>/boolean to User/void, throwing UserNotFoundException on not-found. This simplifies both the service API and the controller, pushing error handling to the centralized @RestControllerAdvice. The not-found tests now verify both the 404 status and the error message in the response body.

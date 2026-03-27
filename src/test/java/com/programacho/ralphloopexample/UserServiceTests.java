@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -50,19 +51,18 @@ class UserServiceTests {
         User user = new User("Alice", "alice@example.com");
         given(userRepository.findById(1L)).willReturn(Optional.of(user));
 
-        Optional<User> result = userService.findById(1L);
+        User result = userService.findById(1L);
 
-        assertThat(result).isPresent();
-        assertThat(result.get().getName()).isEqualTo("Alice");
+        assertThat(result.getName()).isEqualTo("Alice");
     }
 
     @Test
-    void findByIdReturnsEmptyWhenNotFound() {
+    void findByIdThrowsWhenNotFound() {
         given(userRepository.findById(99L)).willReturn(Optional.empty());
 
-        Optional<User> result = userService.findById(99L);
-
-        assertThat(result).isEmpty();
+        assertThatThrownBy(() -> userService.findById(99L))
+                .isInstanceOf(UserNotFoundException.class)
+                .hasMessage("User not found with id: 99");
     }
 
     @Test
@@ -73,39 +73,37 @@ class UserServiceTests {
         given(userRepository.save(any(User.class))).willAnswer(inv -> inv.getArgument(0));
 
         User updated = new User("Alice Updated", "alice-new@example.com");
-        Optional<User> result = userService.update(1L, updated);
+        User result = userService.update(1L, updated);
 
-        assertThat(result).isPresent();
-        assertThat(result.get().getName()).isEqualTo("Alice Updated");
-        assertThat(result.get().getEmail()).isEqualTo("alice-new@example.com");
+        assertThat(result.getName()).isEqualTo("Alice Updated");
+        assertThat(result.getEmail()).isEqualTo("alice-new@example.com");
     }
 
     @Test
-    void updateReturnsEmptyWhenNotFound() {
+    void updateThrowsWhenNotFound() {
         given(userRepository.findById(99L)).willReturn(Optional.empty());
 
-        Optional<User> result = userService.update(99L, new User("X", "x@example.com"));
-
-        assertThat(result).isEmpty();
+        assertThatThrownBy(() -> userService.update(99L, new User("X", "x@example.com")))
+                .isInstanceOf(UserNotFoundException.class)
+                .hasMessage("User not found with id: 99");
     }
 
     @Test
-    void deleteReturnsTrueWhenFound() {
+    void deleteRemovesUserWhenFound() {
         User user = new User("Alice", "alice@example.com");
         given(userRepository.findById(1L)).willReturn(Optional.of(user));
 
-        boolean result = userService.delete(1L);
+        userService.delete(1L);
 
-        assertThat(result).isTrue();
         verify(userRepository).delete(user);
     }
 
     @Test
-    void deleteReturnsFalseWhenNotFound() {
+    void deleteThrowsWhenNotFound() {
         given(userRepository.findById(99L)).willReturn(Optional.empty());
 
-        boolean result = userService.delete(99L);
-
-        assertThat(result).isFalse();
+        assertThatThrownBy(() -> userService.delete(99L))
+                .isInstanceOf(UserNotFoundException.class)
+                .hasMessage("User not found with id: 99");
     }
 }

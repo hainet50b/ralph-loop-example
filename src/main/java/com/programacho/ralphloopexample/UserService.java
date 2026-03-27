@@ -1,7 +1,6 @@
 package com.programacho.ralphloopexample;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -22,22 +21,22 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Optional<User> findById(Long id) {
-        return userRepository.findById(id);
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
     }
 
-    public Optional<User> update(Long id, User updated) {
-        return userRepository.findById(id).map(user -> {
-            user.setName(updated.getName());
-            user.setEmail(updated.getEmail());
-            return userRepository.save(user);
-        });
+    public User update(Long id, User updated) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+        user.setName(updated.getName());
+        user.setEmail(updated.getEmail());
+        return userRepository.save(user);
     }
 
-    public boolean delete(Long id) {
-        return userRepository.findById(id).map(user -> {
-            userRepository.delete(user);
-            return true;
-        }).orElse(false);
+    public void delete(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+        userRepository.delete(user);
     }
 }

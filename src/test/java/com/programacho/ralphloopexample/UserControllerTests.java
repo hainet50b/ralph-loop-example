@@ -1,7 +1,6 @@
 package com.programacho.ralphloopexample;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -65,7 +65,7 @@ class UserControllerTests {
     void findUserById() throws Exception {
         User user = new User("Alice", "alice@example.com");
         user.setId(1L);
-        given(userService.findById(1L)).willReturn(Optional.of(user));
+        given(userService.findById(1L)).willReturn(user);
 
         mockMvc.perform(get("/users/1"))
                 .andExpect(status().isOk())
@@ -74,17 +74,18 @@ class UserControllerTests {
 
     @Test
     void findUserByIdNotFound() throws Exception {
-        given(userService.findById(99L)).willReturn(Optional.empty());
+        given(userService.findById(99L)).willThrow(new UserNotFoundException(99L));
 
         mockMvc.perform(get("/users/99"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("User not found with id: 99"));
     }
 
     @Test
     void updateUser() throws Exception {
         User updated = new User("Alice Updated", "alice-updated@example.com");
         updated.setId(1L);
-        given(userService.update(eq(1L), any(User.class))).willReturn(Optional.of(updated));
+        given(userService.update(eq(1L), any(User.class))).willReturn(updated);
 
         mockMvc.perform(put("/users/1")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -97,29 +98,29 @@ class UserControllerTests {
 
     @Test
     void updateUserNotFound() throws Exception {
-        given(userService.update(eq(99L), any(User.class))).willReturn(Optional.empty());
+        given(userService.update(eq(99L), any(User.class))).willThrow(new UserNotFoundException(99L));
 
         mockMvc.perform(put("/users/99")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {"name":"Nobody","email":"nobody@example.com"}
                                 """))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("User not found with id: 99"));
     }
 
     @Test
     void deleteUser() throws Exception {
-        given(userService.delete(1L)).willReturn(true);
-
         mockMvc.perform(delete("/users/1"))
                 .andExpect(status().isNoContent());
     }
 
     @Test
     void deleteUserNotFound() throws Exception {
-        given(userService.delete(99L)).willReturn(false);
+        willThrow(new UserNotFoundException(99L)).given(userService).delete(99L);
 
         mockMvc.perform(delete("/users/99"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("User not found with id: 99"));
     }
 }
