@@ -137,3 +137,5 @@ An initially empty file where the AI agent logs what it did after each iteration
 
 A CSV file where `ralph.sh` records duration, token usage, and cost for each iteration. Tracking time per iteration helps identify tasks that are difficult or require attention, and can inform how to adjust task granularity in the PRD. Tracking tokens and cost helps verify that changes to `prd.md` or `prompt.md` do not cause unexpected spending.
 
+> **Note:** `metrics.csv` captures how the code was built, not what was built. In traditional development, this kind of process data would not belong in a Git repository. However, in AI-driven development, recording the cost and behavior of the generation process is gaining importance. Until the ecosystem for tracking AI development processes matures, committing this file to Git is a temporary workaround. Whether to do so depends on your organization and project needs.
+
