@@ -14,3 +14,20 @@ Created the User JPA entity with id (auto-generated Long PK), name (required, un
 
 **Remarks:**
 Added spring-boot-starter-web and spring-boot-starter-test proactively since they are required by the tech stack and upcoming tasks.
+
+## Task: Create UserRepository
+
+**Timestamp:**
+2026-03-27T12:40:00Z
+
+**What was done:**
+Created UserRepository interface extending JpaRepository<User, Long> with custom finder methods findByName and findByEmail. Added 7 unit tests covering save, findAll, findById, findByName, findByEmail, and deleteById operations including not-found cases.
+
+**What was changed:**
+- src/main/java/com/programacho/ralphloopexample/UserRepository.java (new)
+- src/test/java/com/programacho/ralphloopexample/UserRepositoryTests.java (new)
+- pom.xml (added spring-boot-starter-data-jpa-test for @DataJpaTest support)
+- prd.md (marked task complete)
+
+**Remarks:**
+In Spring Boot 4, @DataJpaTest moved from org.springframework.boot.test.autoconfigure.orm.jpa to org.springframework.boot.data.jpa.test.autoconfigure, and requires the separate spring-boot-starter-data-jpa-test dependency.
