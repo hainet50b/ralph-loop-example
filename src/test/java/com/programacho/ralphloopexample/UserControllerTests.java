@@ -47,6 +47,32 @@ class UserControllerTests {
     }
 
     @Test
+    void createUserConflict() throws Exception {
+        given(userService.create(any(User.class))).willThrow(new UserAlreadyExistsException("name", "Alice"));
+
+        mockMvc.perform(post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"name":"Alice","email":"alice@example.com"}
+                                """))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.error").value("User already exists with name: Alice"));
+    }
+
+    @Test
+    void updateUserConflict() throws Exception {
+        given(userService.update(eq(1L), any(User.class))).willThrow(new UserAlreadyExistsException("email", "bob@example.com"));
+
+        mockMvc.perform(put("/users/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"name":"Alice","email":"bob@example.com"}
+                                """))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.error").value("User already exists with email: bob@example.com"));
+    }
+
+    @Test
     void findAllUsers() throws Exception {
         User user1 = new User("Alice", "alice@example.com");
         user1.setId(1L);

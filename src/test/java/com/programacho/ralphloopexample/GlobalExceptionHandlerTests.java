@@ -21,4 +21,14 @@ class GlobalExceptionHandlerTests {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody()).containsEntry("error", "User not found with id: 42");
     }
+
+    @Test
+    void handleUserAlreadyExistsReturns409WithMessage() {
+        UserAlreadyExistsException ex = new UserAlreadyExistsException("name", "Alice");
+
+        ResponseEntity<Map<String, String>> response = handler.handleUserAlreadyExists(ex);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+        assertThat(response.getBody()).containsEntry("error", "User already exists with name: Alice");
+    }
 }
