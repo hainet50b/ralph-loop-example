@@ -105,3 +105,20 @@ Created UserAlreadyExistsException for 409 Conflict responses. Added duplicate n
 
 **Remarks:**
 The duplicate check in update() uses `.filter(existing -> !existing.getId().equals(id))` to allow a user to keep their own name or email unchanged during an update, only rejecting when another user holds the same value.
+
+## Task: Add Spring Actuator and expose only the health endpoint
+
+**Timestamp:**
+2026-03-27T12:52:00Z
+
+**What was done:**
+Added the spring-boot-starter-actuator dependency to pom.xml. Configured application.yaml to expose only the health endpoint via `management.endpoints.web.exposure.include: health`. Added 2 unit tests: one verifying the /actuator/health endpoint returns status UP, and one verifying that other actuator endpoints (env, beans) are not exposed (return 404).
+
+**What was changed:**
+- pom.xml (added spring-boot-starter-actuator dependency)
+- src/main/resources/application.yaml (added management.endpoints.web.exposure.include: health)
+- src/test/java/com/programacho/ralphloopexample/ActuatorHealthTests.java (new)
+- prd.md (marked task complete)
+
+**Remarks:**
+In Spring Boot 4, @AutoConfigureMockMvc moved from org.springframework.boot.test.autoconfigure.web.servlet to org.springframework.boot.webmvc.test.autoconfigure. Used @SpringBootTest with @AutoConfigureMockMvc instead of @WebMvcTest to ensure the full actuator infrastructure is loaded.
