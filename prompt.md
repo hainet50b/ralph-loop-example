@@ -15,6 +15,10 @@ Read the PRD at prd.md and progress.md, then follow these instructions:
 
 <current UTC time in ISO 8601 format>
 
+**Why this task:**
+
+<brief reason for choosing this task — e.g., dependency order, prerequisite for other tasks, only remaining task>
+
 **What was done:**
 
 <summary of implementation — use multiple lines if needed>
