@@ -121,3 +121,30 @@ Created `UserNotFoundException` custom runtime exception and `UserExceptionHandl
 **Remarks:**
 
 Used a `@RestControllerAdvice` with `@ExceptionHandler` to centralize exception-to-HTTP-status mapping rather than handling exceptions in each controller method. This pattern will make it easy to add the 409 handler in the next task. The error response returns a JSON body `{"error": "User not found with id: X"}` for better client diagnostics.
+
+## Task: Add exception handling for 409 when the name or email is already taken
+
+**Timestamp:**
+
+2026-03-28T13:38:00Z
+
+**Why this task:**
+
+Dependency order — this is the next unchecked task after the 404 exception handling task was completed. It builds on the existing `@RestControllerAdvice` pattern.
+
+**What was done:**
+
+Created `UserAlreadyExistsException` custom runtime exception. Added `existsByName` and `existsByEmail` query methods to `UserRepository`. Updated `UserService.create()` to check for duplicate name/email before saving. Updated `UserService.update()` to check for duplicate name/email only when the value has changed (to allow updating a user without triggering a conflict on their own existing values). Added a 409 CONFLICT handler in `UserExceptionHandler`. Added 5 new tests: 2 service tests for create conflicts (name and email), 2 service tests for update conflicts (name and email), and 1 controller test each for create 409 and update 409.
+
+**What was changed:**
+
+- src/main/java/com/programacho/ralphloopexample/user/UserAlreadyExistsException.java (new)
+- src/main/java/com/programacho/ralphloopexample/user/UserRepository.java (modified — added existsByName, existsByEmail)
+- src/main/java/com/programacho/ralphloopexample/user/UserService.java (modified — added duplicate checks in create and update)
+- src/main/java/com/programacho/ralphloopexample/user/UserExceptionHandler.java (modified — added 409 handler)
+- src/test/java/com/programacho/ralphloopexample/user/UserServiceTest.java (modified — added 4 conflict tests, updated stubs)
+- src/test/java/com/programacho/ralphloopexample/user/UserControllerTest.java (modified — added 2 conflict tests)
+
+**Remarks:**
+
+The update duplicate check only triggers when the field value actually changes (`!existing.getName().equals(user.getName())`), so updating a user's email while keeping the same name won't falsely trigger a name conflict. Had to remove an unnecessary Mockito stub in the email-taken update test — since the name didn't change, the `existsByName` check was skipped, making the stub unnecessary under strict mode.

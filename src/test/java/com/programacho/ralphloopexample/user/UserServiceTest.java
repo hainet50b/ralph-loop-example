@@ -27,6 +27,8 @@ class UserServiceTest {
     @Test
     void create_savesAndReturnsUser() {
         User user = new User("Alice", "alice@example.com");
+        given(userRepository.existsByName("Alice")).willReturn(false);
+        given(userRepository.existsByEmail("alice@example.com")).willReturn(false);
         given(userRepository.save(user)).willReturn(user);
 
         User result = userService.create(user);
@@ -34,6 +36,27 @@ class UserServiceTest {
         assertThat(result.getName()).isEqualTo("Alice");
         assertThat(result.getEmail()).isEqualTo("alice@example.com");
         then(userRepository).should().save(user);
+    }
+
+    @Test
+    void create_whenNameExists_throwsException() {
+        User user = new User("Alice", "alice@example.com");
+        given(userRepository.existsByName("Alice")).willReturn(true);
+
+        assertThatThrownBy(() -> userService.create(user))
+                .isInstanceOf(UserAlreadyExistsException.class)
+                .hasMessageContaining("name");
+    }
+
+    @Test
+    void create_whenEmailExists_throwsException() {
+        User user = new User("Alice", "alice@example.com");
+        given(userRepository.existsByName("Alice")).willReturn(false);
+        given(userRepository.existsByEmail("alice@example.com")).willReturn(true);
+
+        assertThatThrownBy(() -> userService.create(user))
+                .isInstanceOf(UserAlreadyExistsException.class)
+                .hasMessageContaining("email");
     }
 
     @Test
@@ -71,6 +94,8 @@ class UserServiceTest {
     void update_whenExists_updatesAndReturnsUser() {
         User existing = new User("Alice", "alice@example.com");
         given(userRepository.findById(1L)).willReturn(Optional.of(existing));
+        given(userRepository.existsByName("Alice Updated")).willReturn(false);
+        given(userRepository.existsByEmail("alice.updated@example.com")).willReturn(false);
         given(userRepository.save(any(User.class))).willAnswer(invocation -> invocation.getArgument(0));
 
         User updated = new User("Alice Updated", "alice.updated@example.com");
@@ -78,6 +103,32 @@ class UserServiceTest {
 
         assertThat(result.getName()).isEqualTo("Alice Updated");
         assertThat(result.getEmail()).isEqualTo("alice.updated@example.com");
+    }
+
+    @Test
+    void update_whenNameTaken_throwsException() {
+        User existing = new User("Alice", "alice@example.com");
+        given(userRepository.findById(1L)).willReturn(Optional.of(existing));
+        given(userRepository.existsByName("Bob")).willReturn(true);
+
+        User updated = new User("Bob", "alice@example.com");
+
+        assertThatThrownBy(() -> userService.update(1L, updated))
+                .isInstanceOf(UserAlreadyExistsException.class)
+                .hasMessageContaining("name");
+    }
+
+    @Test
+    void update_whenEmailTaken_throwsException() {
+        User existing = new User("Alice", "alice@example.com");
+        given(userRepository.findById(1L)).willReturn(Optional.of(existing));
+        given(userRepository.existsByEmail("bob@example.com")).willReturn(true);
+
+        User updated = new User("Alice", "bob@example.com");
+
+        assertThatThrownBy(() -> userService.update(1L, updated))
+                .isInstanceOf(UserAlreadyExistsException.class)
+                .hasMessageContaining("email");
     }
 
     @Test

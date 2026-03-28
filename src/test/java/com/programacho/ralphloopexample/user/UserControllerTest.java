@@ -50,6 +50,19 @@ class UserControllerTest {
     }
 
     @Test
+    void create_whenNameTaken_returns409() throws Exception {
+        User user = new User("Alice", "alice@example.com");
+        given(userService.create(any(User.class)))
+                .willThrow(new UserAlreadyExistsException("name", "Alice"));
+
+        mockMvc.perform(post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(user)))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.error").value("User already exists with name: Alice"));
+    }
+
+    @Test
     void findAll_returnsAllUsers() throws Exception {
         User user1 = new User("Alice", "alice@example.com");
         User user2 = new User("Bob", "bob@example.com");
@@ -93,6 +106,19 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsString(updated)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Alice Updated"));
+    }
+
+    @Test
+    void update_whenNameTaken_returns409() throws Exception {
+        User user = new User("Bob", "alice@example.com");
+        given(userService.update(eq(1L), any(User.class)))
+                .willThrow(new UserAlreadyExistsException("name", "Bob"));
+
+        mockMvc.perform(put("/users/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(user)))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.error").value("User already exists with name: Bob"));
     }
 
     @Test
