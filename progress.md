@@ -69,3 +69,28 @@ Created UserService with create, findAll, findById, update, and delete methods. 
 **Remarks:**
 
 Used NoSuchElementException from Optional.orElseThrow() for now. The dedicated exception handling tasks later will replace this with proper HTTP error responses (404/409).
+
+## Task: Create UserController with CRUD endpoints
+
+**Timestamp:**
+
+2026-03-28T13:33:00Z
+
+**Why this task:**
+
+Dependency order — UserController depends on UserService (done) and is the next task in the PRD sequence.
+
+**What was done:**
+
+Created UserController as a @RestController with all five CRUD endpoints: POST /users (201), GET /users (200), GET /users/{id} (200/404), PUT /users/{id} (200), DELETE /users/{id} (204). Added spring-boot-starter-webmvc and spring-boot-starter-webmvc-test dependencies to pom.xml. Wrote 6 unit tests using @WebMvcTest and MockMvc covering all endpoints including the 404 case for findById.
+
+**What was changed:**
+
+- pom.xml (added spring-boot-starter-webmvc and spring-boot-starter-webmvc-test dependencies)
+- src/main/java/com/programacho/ralphloopexample/user/UserController.java (new)
+- src/test/java/com/programacho/ralphloopexample/user/UserControllerTest.java (new)
+- prd.md (marked task as done)
+
+**Remarks:**
+
+In Spring Boot 4, the web starter is named `spring-boot-starter-webmvc` (not `spring-boot-starter-web`). The `@WebMvcTest` annotation moved from `org.springframework.boot.test.autoconfigure.web.servlet` to `org.springframework.boot.webmvc.test.autoconfigure`. Jackson 3.x changed its package from `com.fasterxml.jackson` to `tools.jackson`. A separate `spring-boot-starter-webmvc-test` dependency is required for the @WebMvcTest annotation.
