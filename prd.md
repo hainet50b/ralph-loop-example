@@ -40,7 +40,7 @@ Build a RESTful User CRUD API.
 - [x] Add exception handling for 404 when the user is not found
 - [x] Add exception handling for 409 when the name or email is already taken
 - [x] Add Spring Actuator and expose only the health endpoint
-- [ ] Configure H2 Console in application.yaml
+- [x] Configure H2 Console in application.yaml
 
 ## Post Tasks
 - [ ] Create users.http with HTTP requests for all API endpoints, including normal and error cases

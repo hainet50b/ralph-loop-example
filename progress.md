@@ -172,3 +172,28 @@ Added `spring-boot-starter-actuator` dependency to pom.xml. Configured `manageme
 **Remarks:**
 
 Spring Boot 4's `TestRestClient` was not available via the existing test dependencies. Used `MockMvc` with `@AutoConfigureMockMvc` on a `@SpringBootTest` instead, which works without additional dependencies. The log output confirmed "Exposing 1 endpoint beneath base path '/actuator'", verifying only health is exposed.
+
+## Task: Configure H2 Console in application.yaml
+
+**Timestamp:**
+
+2026-03-28T13:44:00Z
+
+**Why this task:**
+
+Next unchecked task in dependency order. All CRUD, exception handling, and actuator tasks are complete. This is the last remaining task in the Tasks section before Post Tasks.
+
+**What was done:**
+
+Configured the H2 Console by adding `spring.h2.console.enabled: true` to application.yaml. Added `spring-boot-h2console` dependency to pom.xml (required in Spring Boot 4 as H2 console support was extracted to a separate module). Wrote 2 integration tests: one verifying the `H2ConsoleProperties` bean reports `enabled=true`, and one verifying the H2 console servlet is accessible via HTTP at `/h2-console`.
+
+**What was changed:**
+
+- src/main/resources/application.yaml (added H2 console configuration)
+- pom.xml (added spring-boot-h2console dependency)
+- src/test/java/com/programacho/ralphloopexample/h2/H2ConsoleTest.java (new)
+- prd.md (marked task as done)
+
+**Remarks:**
+
+In Spring Boot 4, H2 console auto-configuration was moved from the core `spring-boot-autoconfigure` module to a separate `spring-boot-h2console` module. This dependency must be added explicitly. MockMvc cannot test servlets (only Spring MVC controllers), so the integration test uses Java's built-in `HttpClient` with `@SpringBootTest(webEnvironment = RANDOM_PORT)` to hit the actual servlet. The H2 console servlet redirects `/h2-console` to `/h2-console/` with a 302, so the test accepts both 200 and 302 as valid responses.

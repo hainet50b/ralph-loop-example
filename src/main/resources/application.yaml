@@ -1,6 +1,9 @@
 spring:
   application:
     name: ralph-loop-example
+  h2:
+    console:
+      enabled: true
 
 management:
   endpoints:
