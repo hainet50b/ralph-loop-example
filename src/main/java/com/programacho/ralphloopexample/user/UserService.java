@@ -27,14 +27,16 @@ public class UserService {
     }
 
     public User update(Long id, User user) {
-        User existing = userRepository.findById(id).orElseThrow();
+        User existing = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
         existing.setName(user.getName());
         existing.setEmail(user.getEmail());
         return userRepository.save(existing);
     }
 
     public void delete(Long id) {
-        User existing = userRepository.findById(id).orElseThrow();
+        User existing = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
         userRepository.delete(existing);
     }
 }

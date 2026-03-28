@@ -1,7 +1,6 @@
 package com.programacho.ralphloopexample.user;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import tools.jackson.databind.ObjectMapper;
@@ -79,7 +78,8 @@ class UserControllerTest {
         given(userService.findById(1L)).willReturn(Optional.empty());
 
         mockMvc.perform(get("/users/1"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("User not found with id: 1"));
     }
 
     @Test
@@ -96,10 +96,32 @@ class UserControllerTest {
     }
 
     @Test
+    void update_whenNotExists_returns404() throws Exception {
+        User user = new User("Alice", "alice@example.com");
+        given(userService.update(eq(1L), any(User.class)))
+                .willThrow(new UserNotFoundException(1L));
+
+        mockMvc.perform(put("/users/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(user)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("User not found with id: 1"));
+    }
+
+    @Test
     void delete_returnsNoContent() throws Exception {
         willDoNothing().given(userService).delete(1L);
 
         mockMvc.perform(delete("/users/1"))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void delete_whenNotExists_returns404() throws Exception {
+        willThrow(new UserNotFoundException(1L)).given(userService).delete(1L);
+
+        mockMvc.perform(delete("/users/1"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("User not found with id: 1"));
     }
 }

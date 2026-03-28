@@ -94,3 +94,30 @@ Created UserController as a @RestController with all five CRUD endpoints: POST /
 **Remarks:**
 
 In Spring Boot 4, the web starter is named `spring-boot-starter-webmvc` (not `spring-boot-starter-web`). The `@WebMvcTest` annotation moved from `org.springframework.boot.test.autoconfigure.web.servlet` to `org.springframework.boot.webmvc.test.autoconfigure`. Jackson 3.x changed its package from `com.fasterxml.jackson` to `tools.jackson`. A separate `spring-boot-starter-webmvc-test` dependency is required for the @WebMvcTest annotation.
+
+## Task: Add exception handling for 404 when the user is not found
+
+**Timestamp:**
+
+2026-03-28T13:35:00Z
+
+**Why this task:**
+
+Dependency order — this is the next unchecked task after the four completed foundation tasks (entity, repository, service, controller).
+
+**What was done:**
+
+Created `UserNotFoundException` custom runtime exception and `UserExceptionHandler` (`@RestControllerAdvice`) that maps it to a 404 response with a JSON error body. Updated `UserService.update()` and `UserService.delete()` to throw `UserNotFoundException` instead of the generic `NoSuchElementException`. Updated `UserController.findById()` to also throw `UserNotFoundException` via `orElseThrow()` for consistent error handling through the advice. Added controller tests for update 404 and delete 404 cases, and updated the existing findById 404 test to verify the error response body. Updated `UserServiceTest` to expect `UserNotFoundException`.
+
+**What was changed:**
+
+- src/main/java/com/programacho/ralphloopexample/user/UserNotFoundException.java (new)
+- src/main/java/com/programacho/ralphloopexample/user/UserExceptionHandler.java (new)
+- src/main/java/com/programacho/ralphloopexample/user/UserService.java (modified)
+- src/main/java/com/programacho/ralphloopexample/user/UserController.java (modified)
+- src/test/java/com/programacho/ralphloopexample/user/UserServiceTest.java (modified)
+- src/test/java/com/programacho/ralphloopexample/user/UserControllerTest.java (modified)
+
+**Remarks:**
+
+Used a `@RestControllerAdvice` with `@ExceptionHandler` to centralize exception-to-HTTP-status mapping rather than handling exceptions in each controller method. This pattern will make it easy to add the 409 handler in the next task. The error response returns a JSON body `{"error": "User not found with id: X"}` for better client diagnostics.

@@ -1,7 +1,6 @@
 package com.programacho.ralphloopexample.user;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -88,7 +87,7 @@ class UserServiceTest {
         User updated = new User("Alice", "alice@example.com");
 
         assertThatThrownBy(() -> userService.update(1L, updated))
-                .isInstanceOf(NoSuchElementException.class);
+                .isInstanceOf(UserNotFoundException.class);
     }
 
     @Test
@@ -106,6 +105,6 @@ class UserServiceTest {
         given(userRepository.findById(1L)).willReturn(Optional.empty());
 
         assertThatThrownBy(() -> userService.delete(1L))
-                .isInstanceOf(NoSuchElementException.class);
+                .isInstanceOf(UserNotFoundException.class);
     }
 }
