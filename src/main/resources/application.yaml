@@ -1,3 +1,9 @@
 spring:
   application:
     name: ralph-loop-example
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health

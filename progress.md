@@ -148,3 +148,27 @@ Created `UserAlreadyExistsException` custom runtime exception. Added `existsByNa
 **Remarks:**
 
 The update duplicate check only triggers when the field value actually changes (`!existing.getName().equals(user.getName())`), so updating a user's email while keeping the same name won't falsely trigger a name conflict. Had to remove an unnecessary Mockito stub in the email-taken update test — since the name didn't change, the `existsByName` check was skipped, making the stub unnecessary under strict mode.
+
+## Task: Add Spring Actuator and expose only the health endpoint
+
+**Timestamp:**
+
+2026-03-28T13:39:00Z
+
+**Why this task:**
+
+Next unchecked task in dependency order. All CRUD and exception handling tasks are complete.
+
+**What was done:**
+
+Added `spring-boot-starter-actuator` dependency to pom.xml. Configured `management.endpoints.web.exposure.include: health` in application.yaml to expose only the health endpoint. Wrote 2 integration tests using `@SpringBootTest` and `@AutoConfigureMockMvc`: one verifying `/actuator/health` returns 200 with status "UP", and one verifying `/actuator/env` returns 404 (not exposed).
+
+**What was changed:**
+
+- pom.xml (added spring-boot-starter-actuator dependency)
+- src/main/resources/application.yaml (added management endpoint exposure config)
+- src/test/java/com/programacho/ralphloopexample/actuator/ActuatorHealthTest.java (new)
+
+**Remarks:**
+
+Spring Boot 4's `TestRestClient` was not available via the existing test dependencies. Used `MockMvc` with `@AutoConfigureMockMvc` on a `@SpringBootTest` instead, which works without additional dependencies. The log output confirmed "Exposing 1 endpoint beneath base path '/actuator'", verifying only health is exposed.
