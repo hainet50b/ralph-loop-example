@@ -43,7 +43,7 @@ Build a RESTful User CRUD API.
 - [x] Configure H2 Console in application.yaml
 
 ## Post Tasks
-- [ ] Create users.http with HTTP requests for all API endpoints, including normal and error cases
+- [x] Create users.http with HTTP requests for all API endpoints, including normal and error cases
 
 ## Completion Criteria
 

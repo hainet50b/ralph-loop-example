@@ -197,3 +197,26 @@ Configured the H2 Console by adding `spring.h2.console.enabled: true` to applica
 **Remarks:**
 
 In Spring Boot 4, H2 console auto-configuration was moved from the core `spring-boot-autoconfigure` module to a separate `spring-boot-h2console` module. This dependency must be added explicitly. MockMvc cannot test servlets (only Spring MVC controllers), so the integration test uses Java's built-in `HttpClient` with `@SpringBootTest(webEnvironment = RANDOM_PORT)` to hit the actual servlet. The H2 console servlet redirects `/h2-console` to `/h2-console/` with a 302, so the test accepts both 200 and 302 as valid responses.
+
+## Task: Create users.http with HTTP requests for all API endpoints
+
+**Timestamp:**
+
+2026-03-28T13:46:00Z
+
+**Why this task:**
+
+Only remaining task — all Tasks are complete, this is the sole Post Task.
+
+**What was done:**
+
+Created `users.http` file with HTTP requests for all five CRUD endpoints (POST, GET all, GET by id, PUT, DELETE), plus error cases: 404 for get/update/delete with non-existent id, and 409 for create/update with duplicate name or email. Total of 13 requests covering all normal and error scenarios from the API specification.
+
+**What was changed:**
+
+- users.http (new)
+- prd.md (marked post task as done)
+
+**Remarks:**
+
+This is a Post Task so no unit tests were required. The requests are ordered to be run sequentially: first create two users, then test duplicate errors, then list/get/update operations, and finally delete. The 409 error cases cover both duplicate name and duplicate email for both create and update operations.
