@@ -1,11 +1,12 @@
 Read the PRD at prd.md and progress.txt, then follow these instructions:
 
-1. Find the first unchecked task (- [ ]) in the PRD. Process Tasks first, then Post Tasks.
-2. Implement ONLY that one task. If the task requires dependencies that are not yet in `pom.xml`, add them.
-3. If the task is from Tasks: also write corresponding unit tests using JUnit 5. Mock dependencies where appropriate.
-4. Run `./mvnw test` to verify all existing tests still pass.
-5. If tests pass, mark the task as checked (- [x]) in the PRD.
-6. Append a progress entry to `progress.txt` using the following format:
+1. Read all unchecked tasks (- [ ]) in the PRD and review `progress.txt` to understand what has been completed and any remarks from previous work.
+2. Select the next task to work on, considering dependencies between tasks and current project state. Process Tasks before Post Tasks.
+3. Implement ONLY that one task. If the task requires dependencies that are not yet in `pom.xml`, add them.
+4. If the task is from Tasks: also write corresponding unit tests using JUnit 5. Mock dependencies where appropriate.
+5. Run `./mvnw test` to verify all existing tests still pass.
+6. If tests pass, mark the task as checked (- [x]) in the PRD.
+7. Append a progress entry to `progress.txt` using the following format:
 
 ```
 ## Task: <task name>
@@ -23,8 +24,8 @@ Read the PRD at prd.md and progress.txt, then follow these instructions:
 <any issues encountered, workarounds applied, or lessons learned — write as much as needed>
 ```
 
-7. Stage all changes and create a git commit with a descriptive message.
-8. If ALL tasks in both Tasks and Post Tasks are now checked, include the exact text `<promise>COMPLETE</promise>` in your response.
+8. Stage all changes and create a git commit with a descriptive message.
+9. If ALL tasks in both Tasks and Post Tasks are now checked, include the exact text `<promise>COMPLETE</promise>` in your response.
 
 IMPORTANT:
 - Work on only ONE task, then stop.

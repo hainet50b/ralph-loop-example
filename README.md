@@ -9,7 +9,7 @@ This repository demonstrates the Ralph Loop by building a simple User CRUD API w
 The Ralph Loop is a pattern where an AI agent reads a PRD, implements one task at a time, verifies it with tests, and repeats until all tasks are complete. When you run `./ralph.sh`, the following happens:
 
 1. `ralph.sh` invokes `claude -p` with the contents of `prompt.md`
-2. Claude reads `prd.md` and `progress.txt`, then finds the first unchecked task
+2. Claude reads `prd.md` and `progress.txt`, then selects the next task to work on
 3. Claude implements the task and writes unit tests
 4. Claude runs `./mvnw test` — if tests fail, it fixes the code before proceeding
 5. Claude marks the task as checked in `prd.md` and logs what it did in `progress.txt`
@@ -123,7 +123,7 @@ The PRD consists of the following sections:
 
 ### `prompt.md`
 
-Defines how each iteration should behave — task selection order, testing requirements, commit workflow, and completion signal. Passed to Claude on every iteration. Separated from `ralph.sh` to keep loop control and iteration behavior independent.
+Defines how each iteration should behave — task selection, testing requirements, commit workflow, and completion signal. Passed to Claude on every iteration. Separated from `ralph.sh` to keep loop control and iteration behavior independent.
 
 ### `ralph.sh`
 
