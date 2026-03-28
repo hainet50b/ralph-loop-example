@@ -64,7 +64,7 @@ curl -s localhost:8080/users
 6. To run again, archive the current result branch and start fresh from step 2:
 
 ```bash
-git branch -m "$(git branch --show-current)-$(git log -1 --format=%h main)"
+git branch -m "$(git branch --show-current)-$(git merge-base --fork-point main | cut -c 1-7)"
 git switch main
 ```
 
