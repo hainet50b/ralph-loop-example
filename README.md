@@ -9,10 +9,10 @@ This repository demonstrates the Ralph Loop by building a simple User CRUD API w
 The Ralph Loop is a pattern where an AI agent reads a PRD, implements one task at a time, verifies it with tests, and repeats until all tasks are complete. When you run `./ralph.sh`, the following happens:
 
 1. `ralph.sh` invokes `claude -p` with the contents of `prompt.md`
-2. Claude reads `prd.md` and `progress.txt`, then selects the next task to work on
+2. Claude reads `prd.md` and `progress.md`, then selects the next task to work on
 3. Claude implements the task and writes unit tests
 4. Claude runs `./mvnw test` — if tests fail, it fixes the code before proceeding
-5. Claude marks the task as checked in `prd.md` and logs what it did in `progress.txt`
+5. Claude marks the task as checked in `prd.md` and logs what it did in `progress.md`
 6. Claude stages all changes and creates a git commit
 7. If unchecked tasks remain, `ralph.sh` starts the next iteration from step 1 with a fresh context window
 8. When all tasks are checked, Claude outputs `<promise>COMPLETE</promise>` and the loop exits
@@ -101,7 +101,7 @@ This example uses the following files to drive the Ralph Loop:
 ├── prd.md          # What to build
 ├── prompt.md       # How each iteration should behave
 ├── ralph.sh        # Loop controller
-├── progress.txt    # Work trail
+├── progress.md     # Work trail
 └── metrics.csv     # Token usage and cost per iteration
 ```
 
@@ -136,9 +136,11 @@ The loop controller. A bash script that:
   - Claude outputs `<promise>COMPLETE</promise>` (all tasks done)
   - The max iteration count is reached (exits with failure)
 
-### `progress.txt`
+### `progress.md`
 
 An initially empty file where the AI agent logs what it did after each iteration — what was done, what files were changed, and any remarks (issues, workarounds, lessons learned). Serves as both a work trail and inter-iteration memory (since each `claude -p` call starts with a fresh context window).
+
+> **Note:** This file is commonly named `progress.txt` with a `.txt` extension, since it is primarily written and consumed by the LLM and does not require a specific format. However, in practice, humans frequently review the progress log to track what decisions were made across iterations, so this example uses `.md` for better readability.
 
 ### `metrics.csv`
 
