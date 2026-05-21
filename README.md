@@ -1,5 +1,9 @@
 # Ralph Loop Example
 
+> [!IMPORTANT]
+> **Outdated — superseded by [`ralph-loop-template`](https://github.com/hainet50b/ralph-loop-template).**
+> The patterns demonstrated below shaped a formalized template that now replaces this example for new work. The template is language-agnostic, drops `progress.md` and `metrics.csv` in favor of a human-facing HTML report, and adopts an explicit responsibility split across README / SPEC / PRD / CONVENTIONS / AGENTS / prompt / ralph files. Start there for new projects; the rest of this README is kept as historical context that informed the template.
+
 A hands-on example of the [Ralph Loop](https://ghuntley.com/ralph/) (also known as the "Ralph Wiggum Loop"), an autonomous AI coding workflow originally introduced by Geoffrey Huntley.
 
 This repository demonstrates the Ralph Loop by building a simple User CRUD API with Spring Boot 4 from a minimal PRD (Product Requirements Document).
